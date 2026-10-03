@@ -1,0 +1,1830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>13L.GAME - Invitees Overview</title>
+  <meta name="theme-color" content="#17181c" />
+  <link rel="icon" href="images/img/6007/other/035148092-30400-file_20260409035148091.webp" type="image/x-icon" />
+  
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    
+    :root {
+      --bg-main: #17181c;
+      --bg-card: #22242a;
+      --bg-card-elevated: #282a32;
+      --bg-input: #22242a;
+      --primary-red: #ff3b42;
+      --primary-red-gradient: linear-gradient(135deg, #fa3940 0%, #f6464d 100%);
+      --text-white: #ffffff;
+      --text-grey-light: #b2b6c1;
+      --text-grey-dark: #7e8492;
+      --val-green: #00c282;
+      --val-orange: #ff6e3a;
+      --val-amber: #ff9f24;
+      --border-subtle: #2d3039;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: #0b0c0e;
+      color: var(--text-white);
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .app-viewport {
+      width: 100%;
+      max-width: 440px;
+      min-height: 100vh;
+      background-color: var(--bg-main);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 35px rgba(0, 0, 0, 0.8);
+      padding-bottom: 64px;
+    }
+
+    .view-container {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      min-height: calc(100vh - 64px);
+    }
+    .view-container.active {
+      display: flex;
+    }
+
+    /* Common Header */
+    .page-header {
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      position: sticky;
+      top: 0;
+      background-color: var(--bg-main);
+      z-index: 90;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    .header-btn {
+      background: none;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+      border-radius: 50%;
+    }
+    .header-btn:active {
+      opacity: 0.7;
+    }
+    .header-title {
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      color: #ffffff;
+    }
+
+    /* =========================================
+       INVITEES OVERVIEW VIEW (00:15 - 00:50)
+       ========================================= */
+    .tabs-container {
+      display: flex;
+      padding: 8px 16px 12px 16px;
+      gap: 10px;
+    }
+    .tab-item {
+      flex: 1;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 20px;
+      font-size: 14.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+    .tab-item.active {
+      background: var(--primary-red-gradient);
+      color: #ffffff;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(250, 57, 64, 0.3);
+    }
+    .tab-item.inactive {
+      background-color: var(--bg-card);
+      color: var(--text-grey-dark);
+    }
+    .search-wrap {
+      padding: 0 16px 10px 16px;
+    }
+    .search-box {
+      background-color: var(--bg-input);
+      border-radius: 22px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 10px;
+    }
+    .search-box input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-size: 14px;
+      width: 100%;
+    }
+    .search-box input::placeholder {
+      color: var(--text-grey-dark);
+      font-size: 14px;
+    }
+    .filter-row {
+      display: flex;
+      padding: 0 16px 12px 16px;
+      gap: 12px;
+    }
+    .filter-btn {
+      flex: 1;
+      height: 40px;
+      background-color: var(--bg-card);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #ffffff;
+    }
+    .filter-btn-text {
+      font-weight: 500;
+      letter-spacing: 0.2px;
+    }
+    .stats-card {
+      margin: 0 16px 16px 16px;
+      background-color: var(--bg-card);
+      border-radius: 16px;
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+    }
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .stat-col {
+      display: flex;
+      flex-direction: column;
+    }
+    .stat-col.left {
+      text-align: left;
+    }
+    .stat-col.right {
+      text-align: right;
+    }
+    .stat-val {
+      font-size: 21px;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.2;
+      font-variant-numeric: tabular-nums;
+    }
+    .stat-val.green {
+      color: var(--val-green);
+    }
+    .stat-lbl {
+      font-size: 12px;
+      color: var(--text-grey-dark);
+      margin-top: 4px;
+      font-weight: 400;
+      max-width: 175px;
+      line-height: 1.25;
+    }
+    .sort-row {
+      display: flex;
+      padding: 0 16px 14px 16px;
+      gap: 10px;
+    }
+    .sort-pill {
+      background-color: var(--bg-card);
+      border: none;
+      border-radius: 8px;
+      padding: 8px 14px;
+      color: var(--text-grey-light);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .sort-pill.active {
+      color: #ffffff;
+      background-color: #2e323b;
+    }
+    .records-list {
+      padding: 0 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .sub-card {
+      background-color: var(--bg-card);
+      border-radius: 14px;
+      padding: 14px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .sub-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .sub-uid-box {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .sub-uid-text {
+      font-size: 14.5px;
+      font-weight: 600;
+      color: #ffffff;
+      letter-spacing: 0.2px;
+    }
+    .copy-btn {
+      background: none;
+      border: none;
+      color: #8b92a2;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 2px;
+    }
+    .flag-badge {
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      box-shadow: 0 0 2px rgba(0,0,0,0.4);
+    }
+    .level-tag {
+      font-size: 13px;
+      color: #b1b5c0;
+      font-weight: 500;
+    }
+    .sub-data-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+    }
+    .sub-data-lbl {
+      color: var(--text-grey-dark);
+      font-weight: 400;
+    }
+    .sub-data-val {
+      color: #ffffff;
+      font-weight: 500;
+      font-variant-numeric: tabular-nums;
+    }
+    .sub-data-val.amber {
+      color: var(--val-amber);
+      font-weight: 600;
+    }
+    .sub-data-val.green {
+      color: var(--val-green);
+      font-weight: 600;
+    }
+    .sub-data-val.time {
+      color: var(--text-grey-dark);
+      font-size: 12.5px;
+    }
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 0 80px 0;
+      gap: 14px;
+    }
+    .empty-icon-wrap {
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .empty-text {
+      color: #636874;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    /* =========================================
+       EARN VIEW
+       ========================================= */
+    .earn-carousel-wrap {
+      margin: 12px 16px 10px 16px;
+      position: relative;
+    }
+    .earn-carousel-container {
+      overflow: hidden;
+      border-radius: 16px;
+    }
+    .earn-carousel-track {
+      display: flex;
+      transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+      width: 200%;
+    }
+    .earn-main-card {
+      width: 50%;
+      flex-shrink: 0;
+      background-color: var(--bg-card);
+      border-radius: 16px;
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .earn-comm-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .earn-comm-lbl {
+      font-size: 13px;
+      color: var(--text-grey-light);
+    }
+    .earn-comm-val {
+      font-size: 26px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+    .earn-columns-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .earn-column-box {
+      background: #1d1f25;
+      border-radius: 12px;
+      padding: 10px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .earn-column-title {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #ff474d;
+      text-align: center;
+      padding-bottom: 4px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    .earn-col-metric {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1px;
+    }
+    .earn-col-metric-val {
+      font-size: 15px;
+      font-weight: 700;
+      color: #ffffff;
+      font-variant-numeric: tabular-nums;
+    }
+    .earn-col-metric-lbl {
+      font-size: 11px;
+      color: var(--text-grey-dark);
+      text-align: center;
+    }
+    .earn-slide2-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      row-gap: 20px;
+      column-gap: 12px;
+      padding: 12px 6px;
+    }
+    .earn-slide2-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .earn-slide2-val {
+      font-size: 19px;
+      font-weight: 800;
+      color: #ffffff;
+      font-variant-numeric: tabular-nums;
+    }
+    .earn-slide2-lbl {
+      font-size: 12px;
+      color: var(--text-grey-dark);
+      text-align: center;
+    }
+    .earn-carousel-dots {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      margin: 8px 0 12px 0;
+    }
+    .carousel-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: #3b3f4c;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .carousel-dot.active {
+      background-color: #ff3b42;
+      width: 16px;
+      border-radius: 4px;
+    }
+    .btn-invite-earn {
+      margin: 0 16px 16px 16px;
+      height: 46px;
+      border-radius: 23px;
+      background: var(--primary-red-gradient);
+      color: #fff;
+      border: none;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(250, 56, 62, 0.4);
+    }
+    .earn-menu-list {
+      display: flex;
+      flex-direction: column;
+      margin: 0 16px 20px 16px;
+      background-color: var(--bg-card);
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    .earn-menu-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    }
+    .earn-menu-item:last-child {
+      border-bottom: none;
+    }
+    .earn-menu-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #fff;
+    }
+    .earn-menu-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .earn-code-badge {
+      background: #2a2d36;
+      color: #ffffff;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    .earn-menu-icon {
+      color: #fa383e;
+      display: flex;
+      align-items: center;
+    }
+    .earn-menu-arrow {
+      color: #717684;
+      font-size: 15px;
+    }
+
+    /* =========================================
+       HOME & MINE PREVIEWS
+       ========================================= */
+    .home-header {
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      background-color: var(--bg-main);
+      position: sticky;
+      top: 0;
+      z-index: 90;
+    }
+    .logo-img {
+      height: 28px;
+      object-fit: contain;
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .balance-pill {
+      background: #252830;
+      border-radius: 20px;
+      padding: 5px 12px 5px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14.5px;
+      font-weight: 700;
+      color: #fff;
+      cursor: pointer;
+    }
+    .plus-btn {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--primary-red-gradient);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    .home-content-placeholder {
+      padding: 20px 16px;
+      text-align: center;
+      color: var(--text-grey-dark);
+      font-size: 14px;
+    }
+
+    /* Mine Profile View */
+    .mine-profile-card {
+      margin: 16px;
+      background-color: var(--bg-card);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .mine-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #373b47;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+    .mine-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .mine-uid {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .mine-tag {
+      font-size: 12px;
+      color: var(--text-grey-dark);
+    }
+    .mine-balance-box {
+      margin: 0 16px 16px 16px;
+      background: var(--bg-card);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .mine-balance-val {
+      font-size: 22px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    /* =========================================
+       STICKY BOTTOM TAB BAR
+       ========================================= */
+    .tabbar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 440px;
+      height: 60px;
+      background-color: #17181c;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      z-index: 100;
+    }
+    .tabbar-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      color: #7e8492;
+      font-size: 10.5px;
+      font-weight: 500;
+      cursor: pointer;
+      flex: 1;
+    }
+    .tabbar-item.active {
+      color: #ff3b42;
+    }
+    .tabbar-icon-img {
+      width: 22px;
+      height: 22px;
+      object-fit: contain;
+    }
+    .tabbar-wheel-btn {
+      width: 52px;
+      height: 52px;
+      margin-top: -18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .tabbar-wheel-img {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 8px rgba(255, 59, 66, 0.4));
+    }
+
+    /* =========================================
+       MODALS
+       ========================================= */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.65);
+      z-index: 200;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .modal-backdrop.show {
+      display: flex;
+    }
+    .calendar-sheet {
+      width: 100%;
+      max-width: 440px;
+      background-color: #ffffff;
+      color: #111827;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      padding: 16px 20px 20px 20px;
+      animation: slideUp 0.24s ease-out;
+      position: relative;
+      box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.3);
+      max-height: 82vh;
+      display: flex;
+      flex-direction: column;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+    .calendar-sheet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      margin-bottom: 12px;
+      flex-shrink: 0;
+    }
+    .calendar-sheet-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #111827;
+      width: 100%;
+      text-align: center;
+    }
+    .calendar-close-btn {
+      position: absolute;
+      right: 0;
+      top: 0;
+      background: none;
+      border: none;
+      color: #9ca3af;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 50%;
+    }
+    .calendar-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      font-size: 13px;
+      color: #4b5563;
+      font-weight: 500;
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #f3f4f6;
+      flex-shrink: 0;
+    }
+    .calendar-months-scroll {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-right: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+    .calendar-month-block {
+      display: flex;
+      flex-direction: column;
+    }
+    .calendar-month-title {
+      text-align: center;
+      font-size: 15px;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 10px;
+    }
+    .calendar-days-container {
+      position: relative;
+      min-height: 200px;
+    }
+    .calendar-watermark {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 130px;
+      font-weight: 900;
+      color: rgba(0, 0, 0, 0.04);
+      pointer-events: none;
+      z-index: 1;
+      line-height: 1;
+    }
+    .calendar-days-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      row-gap: 12px;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+    .day-cell {
+      height: 38px;
+      width: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 500;
+      color: #111827;
+      cursor: pointer;
+      border-radius: 6px;
+      margin: 0 auto;
+      transition: all 0.15s ease;
+    }
+    .day-cell.empty {
+      pointer-events: none;
+      visibility: hidden;
+    }
+    .day-cell.selected {
+      background-color: var(--primary-red);
+      color: #ffffff !important;
+      font-weight: 700;
+      box-shadow: 0 4px 10px rgba(248, 58, 66, 0.35);
+    }
+    .calendar-confirm-btn {
+      width: 100%;
+      height: 46px;
+      border-radius: 23px;
+      background: var(--primary-red-gradient);
+      color: #ffffff;
+      border: none;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 16px rgba(250, 57, 64, 0.35);
+      margin-top: 14px;
+      flex-shrink: 0;
+    }
+
+    /* Level Sheet Modal */
+    .level-sheet {
+      width: 100%;
+      max-width: 440px;
+      background-color: #ffffff;
+      color: #111827;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      padding: 16px 20px 24px 20px;
+      animation: slideUp 0.24s ease-out;
+      box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.3);
+    }
+    .level-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .level-opt-item {
+      height: 44px;
+      border-radius: 12px;
+      background-color: #f3f4f6;
+      color: #1f2937;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .level-opt-item.active {
+      background: var(--primary-red-gradient);
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    /* Toast */
+    .toast-msg {
+      position: fixed;
+      bottom: 74px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background-color: rgba(0, 0, 0, 0.85);
+      color: #fff;
+      padding: 9px 18px;
+      border-radius: 20px;
+      font-size: 13.5px;
+      font-weight: 500;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.2s ease;
+      z-index: 500;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+    .toast-msg.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-viewport">
+
+    <!-- =========================================
+         1. INVITEES OVERVIEW VIEW (DEFAULT ON LOAD)
+         ========================================= -->
+    <div class="view-container active" id="viewInvitees">
+      <header class="page-header">
+        <button class="header-btn" onclick="navigateTo('earn')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <div class="header-title">Invitees Overview</div>
+        <button class="header-btn" onclick="showToast('Live Support')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
+            <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>
+          </svg>
+        </button>
+      </header>
+
+      <!-- Tabs (Subordinate data / Invitees) -->
+      <div class="tabs-container">
+        <div class="tab-item active" id="tabSubordinate">Subordinate data</div>
+        <div class="tab-item inactive" id="tabInvitees">Invitees</div>
+      </div>
+
+      <!-- Search Box -->
+      <div class="search-wrap">
+        <div class="search-box">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#7e8492" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="text" id="searchInput" placeholder="Search subordinate ID" autocomplete="off" />
+        </div>
+      </div>
+
+      <!-- Filter Row (Date Selector & Level Selector) -->
+      <div class="filter-row">
+        <div class="filter-btn" id="datePickerBtn">
+          <span class="filter-btn-text" id="selectedDateLabel">2026-10-2</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8b92a2" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+        </div>
+        <div class="filter-btn" id="levelPickerBtn">
+          <span class="filter-btn-text" id="selectedLevelLabel">All</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8b92a2" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+      </div>
+
+      <!-- Summary Stats Card (Exact Green Amounts) -->
+      <div class="stats-card">
+        <div class="stat-row">
+          <div class="stat-col left">
+            <span class="stat-val" id="statDepositNumber">0</span>
+            <span class="stat-lbl">Deposit number</span>
+          </div>
+          <div class="stat-col right">
+            <span class="stat-val green" id="statDepositAmount">₹0.00</span>
+            <span class="stat-lbl">Deposit amount</span>
+          </div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-col left">
+            <span class="stat-val" id="statBettors">0</span>
+            <span class="stat-lbl">Number of bettors</span>
+          </div>
+          <div class="stat-col right">
+            <span class="stat-val green" id="statTotalBet">₹0.00</span>
+            <span class="stat-lbl">Total bet</span>
+          </div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-col left">
+            <span class="stat-val" id="statFirstDepositors">0</span>
+            <span class="stat-lbl">Number of people making first deposit</span>
+          </div>
+          <div class="stat-col right">
+            <span class="stat-val green" id="statFirstDepositAmount">₹0.00</span>
+            <span class="stat-lbl">First deposit Amount</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sort Options -->
+      <div class="sort-row">
+        <button class="sort-pill" data-sort="deposit">
+          <span>Deposit</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg>
+        </button>
+        <button class="sort-pill" data-sort="bet">
+          <span>Bet</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg>
+        </button>
+        <button class="sort-pill" data-sort="commission">
+          <span>Commission</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg>
+        </button>
+      </div>
+
+      <!-- Subordinate List -->
+      <div class="records-list" id="recordsList"></div>
+
+      <!-- Empty State -->
+      <div class="empty-state" id="emptyState" style="display:none;">
+        <div class="empty-icon-wrap">
+          <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+            <rect x="14" y="10" width="36" height="44" rx="6" fill="#22242a" stroke="#333742" stroke-width="2"/>
+            <line x1="22" y1="20" x2="42" y2="20" stroke="#4a4f5d" stroke-width="3" stroke-linecap="round"/>
+            <line x1="22" y1="28" x2="36" y2="28" stroke="#4a4f5d" stroke-width="3" stroke-linecap="round"/>
+            <line x1="22" y1="36" x2="40" y2="36" stroke="#4a4f5d" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="empty-text">No Records</div>
+      </div>
+    </div>
+
+    <!-- =========================================
+         2. EARN VIEW (COMMISSION CAROUSEL)
+         ========================================= -->
+    <div class="view-container" id="viewEarn">
+      <header class="page-header">
+        <button class="header-btn" onclick="navigateTo('home')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <div class="header-title">Earn</div>
+        <div style="width:28px;"></div>
+      </header>
+
+      <!-- Commission Overview Card Carousel -->
+      <div class="earn-carousel-wrap">
+        <div class="earn-carousel-container">
+          <div class="earn-carousel-track" id="earnCarouselTrack">
+            <!-- Slide 1: Yesterday's commission & 2 columns -->
+            <div class="earn-main-card">
+              <div class="earn-comm-header">
+                <span class="earn-comm-lbl">Yesterday's commission</span>
+                <span class="earn-comm-val">₹0.00</span>
+              </div>
+              <div class="earn-columns-grid">
+                <div class="earn-column-box">
+                  <div class="earn-column-title">Direct Invitees</div>
+                  <div class="earn-col-metric">
+                    <span class="earn-col-metric-val">0</span>
+                    <span class="earn-col-metric-lbl">Registered Users</span>
+                  </div>
+                  <div class="earn-col-metric">
+                    <span class="earn-col-metric-val">0</span>
+                    <span class="earn-col-metric-lbl">Deposit Users</span>
+                  </div>
+                  <div class="earn-col-metric">
+                    <span class="earn-col-metric-val">₹0.00</span>
+                    <span class="earn-col-metric-lbl">Deposit Amount</span>
+                  </div>
+                  <div class="earn-col-metric">
+                    <span class="earn-col-metric-val">0</span>
+                    <span class="earn-col-metric-lbl">First Deposit Users</span>
+                  </div>
+                </div>
+                <div class="earn-column-box">
+                  <div class="earn-column-title">Team Invitees</div>
+                  <div class="earn-col-metric">
+                    <span class="earn-col-metric-val">0</span>
+                    <span class="earn-col-metric-lbl">Registered Users</span>
+                  </div>
+                  <div class="earn-col-metric">
+                    <span class="earn-col-metric-val">0</span>
+                    <span class="earn-col-metric-lbl">Deposit Users</span>
+                  </div>
+                  <div class="earn-col-metric">
+                    <span class="earn-col-metric-val">₹0.00</span>
+                    <span class="earn-col-metric-lbl">Deposit Amount</span>
+                  </div>
+                  <div class="earn-col-metric">
+                    <span class="earn-col-metric-val">0</span>
+                    <span class="earn-col-metric-lbl">First Deposit Users</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Slide 2: Weekly & Total Commission & Invitees summary (frame 00:12) -->
+            <div class="earn-main-card">
+              <div class="earn-slide2-grid">
+                <div class="earn-slide2-box">
+                  <span class="earn-slide2-val">₹0.00</span>
+                  <span class="earn-slide2-lbl">This Week</span>
+                </div>
+                <div class="earn-slide2-box">
+                  <span class="earn-slide2-val">₹1,807.95</span>
+                  <span class="earn-slide2-lbl">total commission</span>
+                </div>
+                <div class="earn-slide2-box">
+                  <span class="earn-slide2-val">256</span>
+                  <span class="earn-slide2-lbl">Direct Invitees</span>
+                </div>
+                <div class="earn-slide2-box">
+                  <span class="earn-slide2-val">308</span>
+                  <span class="earn-slide2-lbl">Team Invitees</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Carousel Dots -->
+        <div class="earn-carousel-dots">
+          <div class="carousel-dot active" id="dotSlide0" onclick="switchEarnSlide(0)"></div>
+          <div class="carousel-dot" id="dotSlide1" onclick="switchEarnSlide(1)"></div>
+        </div>
+      </div>
+
+      <button class="btn-invite-earn" onclick="showToast('Invite link copied')">INVITE FRIENDS TO GET MONEY</button>
+
+      <!-- Menu List -->
+      <div class="earn-menu-list">
+        <div class="earn-menu-item" onclick="copyInviteCode()">
+          <div class="earn-menu-left">
+            <span class="earn-menu-icon">🎟️</span>
+            <span>Invite Code</span>
+          </div>
+          <div class="earn-menu-right">
+            <span class="earn-code-badge">T9B2HRN</span>
+            <span class="earn-menu-arrow">&gt;</span>
+          </div>
+        </div>
+
+        <div class="earn-menu-item" onclick="showToast('Commission Details')">
+          <div class="earn-menu-left">
+            <span class="earn-menu-icon">📊</span>
+            <span>Commission Details</span>
+          </div>
+          <span class="earn-menu-arrow">&gt;</span>
+        </div>
+
+        <!-- Invitees Overview Link -->
+        <div class="earn-menu-item" onclick="navigateTo('invitees')">
+          <div class="earn-menu-left">
+            <span class="earn-menu-icon">👥</span>
+            <span>Invitees Overview</span>
+          </div>
+          <span class="earn-menu-arrow">&gt;</span>
+        </div>
+
+        <div class="earn-menu-item" onclick="showToast('New Invitees')">
+          <div class="earn-menu-left">
+            <span class="earn-menu-icon">🆕</span>
+            <span>New Invitees</span>
+          </div>
+          <span class="earn-menu-arrow">&gt;</span>
+        </div>
+
+        <div class="earn-menu-item" onclick="showToast('Invitation Rules')">
+          <div class="earn-menu-left">
+            <span class="earn-menu-icon">📜</span>
+            <span>Invitation Rules</span>
+          </div>
+          <span class="earn-menu-arrow">&gt;</span>
+        </div>
+
+        <div class="earn-menu-item" onclick="showToast('Rebate Ratio')">
+          <div class="earn-menu-left">
+            <span class="earn-menu-icon">📈</span>
+            <span>Rebate Ratio</span>
+          </div>
+          <span class="earn-menu-arrow">&gt;</span>
+        </div>
+
+        <div class="earn-menu-item" onclick="showToast('Gift Code')">
+          <div class="earn-menu-left">
+            <span class="earn-menu-icon">🎁</span>
+            <span>Gift Code</span>
+          </div>
+          <span class="earn-menu-arrow">&gt;</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================
+         3. HOME VIEW
+         ========================================= -->
+    <div class="view-container" id="viewHome">
+      <header class="home-header">
+        <img src="images/img/6007/other/035138929-30398-file_20260409035138926.webp" class="logo-img" alt="13L.GAME" />
+        <div class="header-actions">
+          <div class="balance-pill" onclick="showToast('Balance: ₹23.03')">
+            <span>₹23.03</span>
+            <div class="plus-btn">+</div>
+          </div>
+        </div>
+      </header>
+      <div class="home-content-placeholder">
+        <p style="font-size:16px; font-weight:700; color:#fff; margin-bottom:10px;">13L.GAME Portal</p>
+        <button class="btn-invite-earn" style="margin-top:20px;" onclick="navigateTo('invitees')">GO TO INVITEES OVERVIEW</button>
+      </div>
+    </div>
+
+    <!-- =========================================
+         4. MINE VIEW
+         ========================================= -->
+    <div class="view-container" id="viewMine">
+      <header class="page-header">
+        <button class="header-btn" onclick="navigateTo('home')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <div class="header-title">User Center</div>
+        <div style="width:28px;"></div>
+      </header>
+      <div class="mine-profile-card">
+        <div class="mine-avatar">👤</div>
+        <div class="mine-info">
+          <div class="mine-uid">UID: 440109</div>
+          <div class="mine-tag">Member: NM02YJGO | VIP0</div>
+        </div>
+      </div>
+      <div class="mine-balance-box">
+        <div>
+          <div style="font-size:12px; color:var(--text-grey-dark);">Total Balance</div>
+          <div class="mine-balance-val">₹23.03</div>
+        </div>
+      </div>
+      <div class="earn-menu-list">
+        <div class="earn-menu-item" onclick="navigateTo('invitees')">
+          <div class="earn-menu-left">
+            <span class="earn-menu-icon">👥</span>
+            <span>Invitees Overview</span>
+          </div>
+          <span class="earn-menu-arrow">&gt;</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================
+         STICKY BOTTOM TAB BAR
+         ========================================= -->
+    <nav class="tabbar">
+      <div class="tabbar-item" id="tabNavHome" onclick="navigateTo('home')">
+        <img src="assets/darkRed/tabbar/icon_home-6edfbce6.webp" class="tabbar-icon-img" alt="Home" />
+        <span>Home</span>
+      </div>
+      <div class="tabbar-item" id="tabNavPromo" onclick="showToast('Promo')">
+        <img src="assets/darkRed/tabbar/icon_promo-17f3ee44.webp" class="tabbar-icon-img" alt="Promo" />
+        <span>Promo</span>
+      </div>
+      <div class="tabbar-wheel-btn" onclick="showToast('Wheel')">
+        <img src="assets/darkRed/tabbar/turntable_home-ee908e6a.webp" class="tabbar-wheel-img" alt="Wheel" />
+      </div>
+      <div class="tabbar-item active" id="tabNavEarn" onclick="navigateTo('invitees')">
+        <img src="assets/darkRed/tabbar/icon_earn-a380593b.webp" class="tabbar-icon-img" alt="Earn" />
+        <span>Earn</span>
+      </div>
+      <div class="tabbar-item" id="tabNavMine" onclick="navigateTo('mine')">
+        <img src="assets/darkRed/tabbar/icon_menu-cb9b38c1.webp" class="tabbar-icon-img" alt="Mine" />
+        <span>Mine</span>
+      </div>
+    </nav>
+
+  </div>
+
+  <!-- Bottom Sheet Calendar Modal -->
+  <div class="modal-backdrop" id="calendarModal">
+    <div class="calendar-sheet">
+      <div class="calendar-sheet-header">
+        <div class="calendar-sheet-title">Calendar</div>
+        <button class="calendar-close-btn" id="calendarCloseBtn">✕</button>
+      </div>
+
+      <div class="calendar-weekdays">
+        <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+      </div>
+
+      <!-- Multi-month scrollable container -->
+      <div class="calendar-months-scroll" id="calendarMonthsScroll"></div>
+
+      <button class="calendar-confirm-btn" id="calendarConfirmBtn">Confirm</button>
+    </div>
+  </div>
+
+  <!-- Bottom Sheet Level Modal -->
+  <div class="modal-backdrop" id="levelModal">
+    <div class="level-sheet">
+      <div class="calendar-sheet-header">
+        <div class="calendar-sheet-title">Select Level</div>
+        <button class="calendar-close-btn" id="levelCloseBtn">✕</button>
+      </div>
+      <div class="level-list">
+        <div class="level-opt-item active" data-level="All">All</div>
+        <div class="level-opt-item" data-level="Level 1">Level 1</div>
+        <div class="level-opt-item" data-level="Level 2">Level 2</div>
+        <div class="level-opt-item" data-level="Level 3">Level 3</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-msg" id="toastMsg">Copied successfully</div>
+
+  <script>
+    const COPY_SVG = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+    const INDIAN_FLAG_SVG = '<svg viewBox="0 0 640 480" width="17" height="17"><path fill="#f93" d="M0 0h640v160H0z"/><path fill="#fff" d="M0 160h640v160H0z"/><path fill="#128807" d="M0 320h640v160H0z"/><circle cx="320" cy="240" r="40" fill="none" stroke="#008" stroke-width="6"/></svg>';
+
+    // Exact Static May Data (from 23.mp4 if scrolled to May)
+    const STATIC_DATA = {
+      "2026-5-4": {
+        stats: { depositNumber: 0, depositAmount: "₹0.00", bettors: 0, totalBet: "₹0.00", firstDepositors: 0, firstDepositAmount: "₹0.00" },
+        records: []
+      },
+      "2026-5-5": {
+        stats: { depositNumber: 28, depositAmount: "₹17,900.00", bettors: 27, totalBet: "₹45,013.92", firstDepositors: 28, firstDepositAmount: "₹11,200.00" },
+        records: [
+          { uid: "531364", level: "Level 1", deposit: "₹100.00", bet: "₹110.00", commission: "₹0.66", time: "2026-05-05" },
+          { uid: "531395", level: "Level 1", deposit: "₹500.00", bet: "₹1,420.00", commission: "₹8.52", time: "2026-05-05" },
+          { uid: "532168", level: "Level 1", deposit: "₹7,000.00", bet: "₹12,802.00", commission: "₹76.81", time: "2026-05-05" },
+          { uid: "531474", level: "Level 1", deposit: "₹2,000.00", bet: "₹4,120.00", commission: "₹24.72", time: "2026-05-05" },
+          { uid: "529811", level: "Level 1", deposit: "₹3,500.00", bet: "₹8,920.00", commission: "₹53.52", time: "2026-05-05" },
+          { uid: "534209", level: "Level 1", deposit: "₹1,500.00", bet: "₹3,850.00", commission: "₹23.10", time: "2026-05-05" }
+        ]
+      },
+      "2026-5-6": {
+        stats: { depositNumber: 74, depositAmount: "₹40,889.00", bettors: 73, totalBet: "₹91,336.57", firstDepositors: 66, firstDepositAmount: "₹19,600.00" },
+        records: [
+          { uid: "532168", level: "Level 1", deposit: "₹10,000.00", bet: "₹7,491.00", commission: "₹44.95", time: "2026-05-06" },
+          { uid: "543367", level: "Level 1", deposit: "₹5,000.00", bet: "₹8,320.00", commission: "₹49.92", time: "2026-05-06" },
+          { uid: "548902", level: "Level 1", deposit: "₹6,500.00", bet: "₹14,200.00", commission: "₹85.20", time: "2026-05-06" },
+          { uid: "550123", level: "Level 1", deposit: "₹8,000.00", bet: "₹22,100.00", commission: "₹132.60", time: "2026-05-06" }
+        ]
+      },
+      "2026-5-7": {
+        stats: { depositNumber: 64, depositAmount: "₹33,000.00", bettors: 63, totalBet: "₹80,919.20", firstDepositors: 46, firstDepositAmount: "₹18,500.00" },
+        records: [
+          { uid: "531431", level: "Level 1", deposit: "₹100.00", bet: "₹147.00", commission: "₹0.88", time: "2026-05-07" },
+          { uid: "531434", level: "Level 1", deposit: "₹100.00", bet: "₹110.00", commission: "₹0.66", time: "2026-05-07" }
+        ]
+      },
+      "2026-5-8": {
+        stats: { depositNumber: 112, depositAmount: "₹56,988.00", bettors: 105, totalBet: "₹108,283.20", firstDepositors: 90, firstDepositAmount: "₹34,288.00" },
+        records: [
+          { uid: "531447", level: "Level 1", deposit: "₹100.00", bet: "₹100.00", commission: "₹0.60", time: "2026-05-08" },
+          { uid: "531740", level: "Level 1", deposit: "₹100.00", bet: "₹110.00", commission: "₹0.66", time: "2026-05-08" }
+        ]
+      },
+      "2026-5-9": {
+        stats: { depositNumber: 42, depositAmount: "₹15,500.00", bettors: 42, totalBet: "₹40,377.05", firstDepositors: 31, firstDepositAmount: "₹10,000.00" },
+        records: [
+          { uid: "532079", level: "Level 1", deposit: "₹100.00", bet: "₹350.00", commission: "₹2.10", time: "2026-05-09" }
+        ]
+      },
+      "2026-5-10": {
+        stats: { depositNumber: 6, depositAmount: "₹700.00", bettors: 5, totalBet: "₹920.00", firstDepositors: 0, firstDepositAmount: "₹0.00" },
+        records: [
+          { uid: "570971", level: "Level 2", deposit: "₹100.00", bet: "₹104.00", commission: "₹0.19", time: "2026-05-10" },
+          { uid: "535209", level: "Level 1", deposit: "₹200.00", bet: "₹310.00", commission: "₹1.86", time: "2026-05-10" }
+        ]
+      }
+    };
+
+    // HEAVY DETERMINISTIC RANDOM ENGINE
+    function generateDayData(dateKey) {
+      if (STATIC_DATA[dateKey]) {
+        return STATIC_DATA[dateKey];
+      }
+
+      const parts = dateKey.split('-');
+      const y = parseInt(parts[0], 10);
+      const m = parseInt(parts[1], 10);
+      const d = parseInt(parts[2], 10);
+      const timeStr = `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+
+      // Deterministic PRNG seed from date string
+      let seed = 0;
+      for (let i = 0; i < dateKey.length; i++) {
+        seed = (seed * 37 + dateKey.charCodeAt(i) * 11) % 2147483647;
+      }
+      function rand(min, max) {
+        seed = (seed * 16807 + 7) % 2147483647;
+        return min + (seed % (max - min + 1));
+      }
+
+      // Check if in Prince Gurjar heavy data period (20 September 2026 onwards to today)
+      // "Tier 1 high rakhna daily 100-150 members deposit 300+ registration first deposit 2lac ke kareeb or total bet 4lac+ random rkhna deposit + hundreds me rkhna ok"
+      const isHeavy = (y === 2026 && ((m === 9 && d >= 20) || (m === 10)));
+
+      let bettors, depNum, firstDeps, firstDepAmt, totalDep, totalBet;
+
+      if (isHeavy) {
+        bettors = rand(115, 148);                       // daily 100-150 members
+        depNum = rand(315, 375);                        // deposit 300+ registration
+        firstDeps = rand(95, Math.min(bettors, 135));   // first deposit users
+        firstDepAmt = rand(1900, 2180) * 100;           // first deposit 2lac ke kareeb (hundreds me)
+        totalDep = rand(3350, 3920) * 100;              // deposit in clean hundreds
+        totalBet = (rand(4150, 4950) * 100 + rand(10, 99) + rand(10, 95) / 100.0).toFixed(2); // total bet 4lac+ random
+      } else {
+        bettors = rand(25, 75);
+        depNum = rand(bettors, bettors + 20);
+        firstDeps = rand(15, bettors);
+        firstDepAmt = rand(300, 700) * 100;
+        totalDep = rand(500, 1200) * 100;
+        totalBet = (totalDep * 2.3).toFixed(2);
+      }
+
+      const records = [];
+      const depositPool = [100, 200, 300, 500, 1000, 1500, 2000, 3000, 5000, 10000];
+      const weights = [15, 20, 15, 20, 12, 6, 6, 3, 2, 1];
+      const weightSum = weights.reduce((a, b) => a + b, 0);
+
+      const baseUid = 530000 + rand(500, 8000);
+
+      for (let i = 0; i < bettors; i++) {
+        const uid = String(baseUid + i * rand(3, 11));
+        // Tier 1 high: 95% Level 1, 5% Level 2
+        const level = (rand(1, 100) <= 95) ? "Level 1" : "Level 2";
+
+        // Pick deposit in clean hundreds
+        let wRnd = rand(1, weightSum);
+        let curW = 0;
+        let dep = 200;
+        for (let j = 0; j < depositPool.length; j++) {
+          curW += weights[j];
+          if (wRnd <= curW) {
+            dep = depositPool[j];
+            break;
+          }
+        }
+
+        // Bet is 1.1x to 3.2x of deposit
+        const multiplier = (rand(110, 320) / 100.0);
+        const bet = (dep * multiplier).toFixed(2);
+        const comm = (bet * 0.006).toFixed(2);
+
+        records.push({
+          uid: uid,
+          level: level,
+          deposit: `₹${dep.toLocaleString('en-IN')}.00`,
+          bet: `₹${Number(bet).toLocaleString('en-IN', {minimumFractionDigits: 2})}`,
+          commission: `₹${Number(comm).toLocaleString('en-IN', {minimumFractionDigits: 2})}`,
+          time: timeStr
+        });
+      }
+
+      return {
+        stats: {
+          depositNumber: depNum,
+          depositAmount: `₹${Number(totalDep).toLocaleString('en-IN')}.00`,
+          bettors: bettors,
+          totalBet: `₹${Number(totalBet).toLocaleString('en-IN', {minimumFractionDigits: 2})}`,
+          firstDepositors: firstDeps,
+          firstDepositAmount: `₹${Number(firstDepAmt).toLocaleString('en-IN')}.00`
+        },
+        records: records
+      };
+    }
+
+    // Default Date: 2026-10-2 (matching video screencast Fri, 2 Oct)
+    let currentDate = "2026-10-2";
+    let pendingDate = "2026-10-2";
+    let selectedLevel = "All";
+    let activeSort = null;
+    let sortAsc = false;
+    let searchQuery = "";
+
+    // DOM Elements
+    const selectedDateLabel = document.getElementById("selectedDateLabel");
+    const selectedLevelLabel = document.getElementById("selectedLevelLabel");
+    const statDepositNumber = document.getElementById("statDepositNumber");
+    const statDepositAmount = document.getElementById("statDepositAmount");
+    const statBettors = document.getElementById("statBettors");
+    const statTotalBet = document.getElementById("statTotalBet");
+    const statFirstDepositors = document.getElementById("statFirstDepositors");
+    const statFirstDepositAmount = document.getElementById("statFirstDepositAmount");
+    const recordsList = document.getElementById("recordsList");
+    const emptyState = document.getElementById("emptyState");
+    const calendarModal = document.getElementById("calendarModal");
+    const levelModal = document.getElementById("levelModal");
+    const searchInput = document.getElementById("searchInput");
+    const toastMsg = document.getElementById("toastMsg");
+
+    function initCalendarGrid() {
+      const scrollContainer = document.getElementById("calendarMonthsScroll");
+      if (!scrollContainer) return;
+      scrollContainer.innerHTML = "";
+
+      // Render months chronologically: May 2026 up to October 2026
+      const months = [
+        { year: 2026, month: 5, name: "2026/5", watermark: "5", daysInMonth: 31, startDay: 5 }, // Fri
+        { year: 2026, month: 6, name: "2026/6", watermark: "6", daysInMonth: 30, startDay: 1 }, // Mon
+        { year: 2026, month: 7, name: "2026/7", watermark: "7", daysInMonth: 31, startDay: 3 }, // Wed
+        { year: 2026, month: 8, name: "2026/8", watermark: "8", daysInMonth: 31, startDay: 6 }, // Sat
+        { year: 2026, month: 9, name: "2026/9", watermark: "9", daysInMonth: 30, startDay: 2 }, // Tue
+        { year: 2026, month: 10, name: "2026/10", watermark: "10", daysInMonth: 31, startDay: 4 } // Thu
+      ];
+
+      months.forEach(m => {
+        const monthBlock = document.createElement("div");
+        monthBlock.className = "calendar-month-block";
+        monthBlock.dataset.monthKey = `${m.year}-${m.month}`;
+
+        const title = document.createElement("div");
+        title.className = "calendar-month-title";
+        title.textContent = m.name;
+        monthBlock.appendChild(title);
+
+        const container = document.createElement("div");
+        container.className = "calendar-days-container";
+
+        const watermark = document.createElement("div");
+        watermark.className = "calendar-watermark";
+        watermark.textContent = m.watermark;
+        container.appendChild(watermark);
+
+        const grid = document.createElement("div");
+        grid.className = "calendar-days-grid";
+
+        // Empty offset cells
+        for (let i = 0; i < m.startDay; i++) {
+          const emptyCell = document.createElement("div");
+          emptyCell.className = "day-cell empty";
+          grid.appendChild(emptyCell);
+        }
+
+        // Day cells
+        for (let d = 1; d <= m.daysInMonth; d++) {
+          const cell = document.createElement("div");
+          cell.className = "day-cell";
+          cell.textContent = d;
+          const dateKey = `${m.year}-${m.month}-${d}`;
+          cell.dataset.date = dateKey;
+
+          if (dateKey === pendingDate) {
+            cell.classList.add("selected");
+          }
+
+          cell.addEventListener("click", () => {
+            document.querySelectorAll(".day-cell").forEach(c => c.classList.remove("selected"));
+            cell.classList.add("selected");
+            pendingDate = dateKey;
+          });
+
+          grid.appendChild(cell);
+        }
+
+        container.appendChild(grid);
+        monthBlock.appendChild(container);
+        scrollContainer.appendChild(monthBlock);
+      });
+    }
+
+    function showToast(text) {
+      toastMsg.textContent = text;
+      toastMsg.classList.add("show");
+      setTimeout(() => {
+        toastMsg.classList.remove("show");
+      }, 1500);
+    }
+
+    window.copyUID = function(uid) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(uid).catch(() => {});
+      }
+      showToast("Copied successfully");
+    };
+
+    window.copyInviteCode = function() {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText("T9B2HRN").catch(() => {});
+      }
+      showToast("Invite Code copied: T9B2HRN");
+    };
+
+    window.switchEarnSlide = function(idx) {
+      const track = document.getElementById("earnCarouselTrack");
+      if (track) {
+        track.style.transform = `translateX(-${idx * 50}%)`;
+      }
+      const dot0 = document.getElementById("dotSlide0");
+      const dot1 = document.getElementById("dotSlide1");
+      if (dot0 && dot1) {
+        dot0.classList.toggle("active", idx === 0);
+        dot1.classList.toggle("active", idx === 1);
+      }
+    };
+
+    function renderPage() {
+      selectedDateLabel.textContent = currentDate;
+      selectedLevelLabel.textContent = selectedLevel;
+
+      const dayData = generateDayData(currentDate);
+
+      // Stats
+      statDepositNumber.textContent = dayData.stats.depositNumber;
+      statDepositAmount.textContent = dayData.stats.depositAmount;
+      statBettors.textContent = dayData.stats.bettors;
+      statTotalBet.textContent = dayData.stats.totalBet;
+      statFirstDepositors.textContent = dayData.stats.firstDepositors;
+      statFirstDepositAmount.textContent = dayData.stats.firstDepositAmount;
+
+      // Filter & Sort records
+      let records = [...(dayData.records || [])];
+
+      // Level filter
+      if (selectedLevel !== "All") {
+        records = records.filter(r => r.level === selectedLevel);
+      }
+
+      // Search filter
+      if (searchQuery.trim()) {
+        const q = searchQuery.trim().toLowerCase();
+        records = records.filter(r => r.uid.toLowerCase().includes(q));
+      }
+
+      // Sort
+      if (activeSort) {
+        records.sort((a, b) => {
+          const valA = parseFloat(a[activeSort].replace(/[^0-9.]/g, '')) || 0;
+          const valB = parseFloat(b[activeSort].replace(/[^0-9.]/g, '')) || 0;
+          return sortAsc ? valA - valB : valB - valA;
+        });
+      }
+
+      recordsList.innerHTML = "";
+
+      if (records.length === 0) {
+        emptyState.style.display = "flex";
+      } else {
+        emptyState.style.display = "none";
+        records.forEach(rec => {
+          const card = document.createElement("div");
+          card.className = "sub-card";
+          card.innerHTML = `
+            <div class="sub-card-header">
+              <div class="sub-uid-box">
+                <span class="sub-uid-text">UID:${rec.uid}</span>
+                <button class="copy-btn" onclick="copyUID('${rec.uid}')" title="Copy UID">
+                  ${COPY_SVG}
+                </button>
+                <div class="flag-badge">
+                  ${INDIAN_FLAG_SVG}
+                </div>
+              </div>
+              <span class="level-tag">${rec.level || 'Level 1'}</span>
+            </div>
+            <div class="sub-data-row">
+              <span class="sub-data-lbl">Deposit amount</span>
+              <span class="sub-data-val">${rec.deposit}</span>
+            </div>
+            <div class="sub-data-row">
+              <span class="sub-data-lbl">Bet amount</span>
+              <span class="sub-data-val amber">${rec.bet}</span>
+            </div>
+            <div class="sub-data-row">
+              <span class="sub-data-lbl">Commission</span>
+              <span class="sub-data-val green">${rec.commission}</span>
+            </div>
+            <div class="sub-data-row">
+              <span class="sub-data-lbl">Time</span>
+              <span class="sub-data-val time">${rec.time}</span>
+            </div>
+          `;
+          recordsList.appendChild(card);
+        });
+      }
+    }
+
+    // View Routing
+    window.navigateTo = function(view) {
+      document.querySelectorAll('.view-container').forEach(v => v.classList.remove('active'));
+      document.querySelectorAll('.tabbar-item').forEach(t => t.classList.remove('active'));
+
+      if (view === 'home') {
+        document.getElementById('viewHome').classList.add('active');
+        document.getElementById('tabNavHome').classList.add('active');
+        window.location.hash = '#/';
+      } else if (view === 'earn') {
+        document.getElementById('viewEarn').classList.add('active');
+        document.getElementById('tabNavEarn').classList.add('active');
+        window.location.hash = '#/earn';
+      } else if (view === 'mine') {
+        document.getElementById('viewMine').classList.add('active');
+        document.getElementById('tabNavMine').classList.add('active');
+        window.location.hash = '#/main';
+      } else {
+        // Default: Invitees Overview
+        document.getElementById('viewInvitees').classList.add('active');
+        document.getElementById('tabNavEarn').classList.add('active');
+        window.location.hash = '#/earn/inviteesOverview';
+      }
+      window.scrollTo(0, 0);
+    };
+
+    // Calendar Modal Handlers
+    document.getElementById("datePickerBtn").addEventListener("click", () => {
+      pendingDate = currentDate;
+      initCalendarGrid();
+      calendarModal.classList.add("show");
+
+      // Auto-scroll to selected month in view
+      setTimeout(() => {
+        const parts = pendingDate.split('-');
+        const monthKey = `${parts[0]}-${parts[1]}`;
+        const targetBlock = document.querySelector(`.calendar-month-block[data-month-key="${monthKey}"]`);
+        if (targetBlock) {
+          targetBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 60);
+    });
+
+    document.getElementById("calendarCloseBtn").addEventListener("click", () => {
+      calendarModal.classList.remove("show");
+    });
+
+    calendarModal.addEventListener("click", (e) => {
+      if (e.target === calendarModal) {
+        calendarModal.classList.remove("show");
+      }
+    });
+
+    document.getElementById("calendarConfirmBtn").addEventListener("click", () => {
+      currentDate = pendingDate;
+      calendarModal.classList.remove("show");
+      renderPage();
+    });
+
+    // Level Picker Modal Handlers
+    document.getElementById("levelPickerBtn").addEventListener("click", () => {
+      levelModal.classList.add("show");
+    });
+
+    document.getElementById("levelCloseBtn").addEventListener("click", () => {
+      levelModal.classList.remove("show");
+    });
+
+    levelModal.addEventListener("click", (e) => {
+      if (e.target === levelModal) {
+        levelModal.classList.remove("show");
+      }
+    });
+
+    document.querySelectorAll(".level-opt-item").forEach(opt => {
+      opt.addEventListener("click", () => {
+        document.querySelectorAll(".level-opt-item").forEach(o => o.classList.remove("active"));
+        opt.classList.add("active");
+        selectedLevel = opt.dataset.level;
+        levelModal.classList.remove("show");
+        renderPage();
+      });
+    });
+
+    // Search Filter
+    searchInput.addEventListener("input", (e) => {
+      searchQuery = e.target.value;
+      renderPage();
+    });
+
+    // Sort Pills
+    document.querySelectorAll(".sort-pill").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const sortType = btn.dataset.sort;
+        if (activeSort === sortType) {
+          sortAsc = !sortAsc;
+        } else {
+          activeSort = sortType;
+          sortAsc = false;
+        }
+        document.querySelectorAll(".sort-pill").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        renderPage();
+      });
+    });
+
+    // Subordinate Data / Invitees Sub-Tabs
+    document.getElementById("tabSubordinate").addEventListener("click", () => {
+      document.getElementById("tabSubordinate").className = "tab-item active";
+      document.getElementById("tabInvitees").className = "tab-item inactive";
+    });
+    document.getElementById("tabInvitees").addEventListener("click", () => {
+      document.getElementById("tabInvitees").className = "tab-item active";
+      document.getElementById("tabSubordinate").className = "tab-item inactive";
+      showToast("Invitees Tab");
+    });
+
+    // Initial Load: Always route to Invitees Overview unless specific hash
+    window.addEventListener("load", () => {
+      const hash = window.location.hash;
+      if (hash === '#/' || hash === '#/home') {
+        navigateTo('home');
+      } else if (hash === '#/earn') {
+        navigateTo('earn');
+      } else if (hash === '#/main') {
+        navigateTo('mine');
+      } else {
+        navigateTo('invitees');
+      }
+      initCalendarGrid();
+      renderPage();
+    });
+
+    window.addEventListener("popstate", () => {
+      const hash = window.location.hash;
+      if (hash === '#/' || hash === '#/home') {
+        navigateTo('home');
+      } else if (hash === '#/earn') {
+        navigateTo('earn');
+      } else if (hash === '#/main') {
+        navigateTo('mine');
+      } else {
+        navigateTo('invitees');
+      }
+    });
+  </script>
+</body>
+</html>
